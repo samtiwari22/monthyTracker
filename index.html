@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lunar Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="background">
+    <div class="stars"></div>
+    <div class="gradient-overlay"></div>
+  </div>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" id="themeToggle">
+    <span class="moon-icon">🌙</span>
+    <span class="sun-icon">☀️</span>
+  </button>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Navigation -->
+    <nav class="nav-bar">
+      <button class="nav-btn active" data-screen="dashboard">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-btn" data-screen="add-expense">
+        <span class="nav-icon">💰</span>
+        <span>Add Expense</span>
+      </button>
+      <button class="nav-btn" data-screen="shortcuts">
+        <span class="nav-icon">💡</span>
+        <span>Tips</span>
+      </button>
+    </nav>
+
+    <!-- Dashboard Screen -->
+    <div class="screen active" id="dashboard">
+      <div class="screen-header">
+        <h1>Monthly Budget</h1>
+        <p class="subtitle">Track your spending journey</p>
+      </div>
+
+      <div class="budget-clock-container">
+        <div class="budget-clock">
+          <div class="clock-face">
+            <div class="clock-hand" id="clockHand"></div>
+            <div class="clock-center"></div>
+            <div class="clock-numbers">
+              <span class="number" style="--i: 0">0%</span>
+              <span class="number" style="--i: 1">25%</span>
+              <span class="number" style="--i: 2">50%</span>
+              <span class="number" style="--i: 3">75%</span>
+            </div>
+          </div>
+          <div class="budget-info">
+            <div class="budget-amount">
+              <span class="label">Spent</span>
+              <span class="amount" id="totalSpent">₹0</span>
+            </div>
+            <div class="budget-remaining">
+              <span class="label">Remaining</span>
+              <span class="amount" id="remainingBudget">₹2,000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-info">
+            <span class="stat-label">This Month</span>
+            <span class="stat-value" id="monthlyTotal">₹0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💾</div>
+          <div class="stat-info">
+            <span class="stat-label">Remaining %</span>
+            <span class="stat-value" id="savingsRate">100%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="budget-setter">
+        <label for="monthlyBudget">Set Monthly Budget</label>
+        <div class="input-group">
+          <input type="number" id="monthlyBudget" placeholder="2000" min="0">
+          <button id="setBudget">Set</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Expense Screen -->
+    <div class="screen" id="add-expense">
+      <div class="screen-header">
+        <h1>Add Expense</h1>
+        <p class="subtitle">Record your spending</p>
+      </div>
+
+      <form class="expense-form" id="expenseForm">
+        <div class="form-group">
+          <label for="expenseAmount">Amount</label>
+          <input type="number" id="expenseAmount" placeholder="0.00" step="0.01" min="0.01" required>
+        </div>
+
+        <div class="form-group">
+          <label for="expenseCategory">Category</label>
+          <select id="expenseCategory" required>
+            <option value="">Select category</option>
+            <option value="food">🍔 Food & Dining</option>
+            <option value="transport">🚗 Transportation</option>
+            <option value="shopping">🛍️ Shopping</option>
+            <option value="entertainment">🎬 Entertainment</option>
+            <option value="bills">📄 Bills & Utilities</option>
+            <option value="health">🏥 Healthcare</option>
+            <option value="other">📦 Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="expenseDate">Date</label>
+          <input type="date" id="expenseDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="expenseDescription">Description (Optional)</label>
+          <input type="text" id="expenseDescription" placeholder="What did you buy?">
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <span>Add Expense</span>
+          <div class="btn-glow"></div>
+        </button>
+      </form>
+
+      <div class="expenses-list" id="expensesList">
+        <h3>Recent Expenses</h3>
+        <div class="expenses-container" id="expensesContainer">
+          <!-- Expenses will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Smart Shortcuts Screen -->
+    <div class="screen" id="shortcuts">
+      <div class="screen-header">
+        <h1>Smart Tips</h1>
+        <p class="subtitle">Save money with these tips</p>
+      </div>
+
+      <div class="sleeping-cat">
+        <svg viewBox="0 0 200 150" class="cat-svg">
+          <ellipse cx="100" cy="120" rx="60" ry="20" fill="rgba(255,255,255,0.1)" class="cat-shadow"/>
+          <ellipse cx="100" cy="100" rx="45" ry="35" fill="#4a5568" class="cat-body"/>
+          <circle cx="85" cy="85" r="15" fill="#4a5568" class="cat-head"/>
+          <circle cx="115" cy="85" r="15" fill="#4a5568" class="cat-head"/>
+          <polygon points="75,75 80,65 85,75" fill="#4a5568" class="cat-ear"/>
+          <polygon points="115,75 120,65 125,75" fill="#4a5568" class="cat-ear"/>
+          <circle cx="82" cy="82" r="2" fill="#2d3748" class="cat-eye"/>
+          <circle cx="118" cy="82" r="2" fill="#2d3748" class="cat-eye"/>
+          <path d="M 95 88 Q 100 92 105 88" stroke="#2d3748" stroke-width="2" fill="none" class="cat-mouth"/>
+          <ellipse cx="100" cy="110" rx="8" ry="4" fill="#e2e8f0" class="cat-belly"/>
+        </svg>
+      </div>
+
+      <div class="tips-grid">
+        <div class="tip-card" data-tip="budget">
+          <div class="tip-icon">🎯</div>
+          <h3>Auto-Budget</h3>
+          <p>Set automatic spending limits for each category</p>
+          <div class="tip-glow"></div>
+        </div>
+
+        <div class="tip-card" data-tip="analysis">
+          <div class="tip-icon">📊</div>
+          <h3>Spending Analysis</h3>
+          <p>Review your patterns and find saving opportunities</p>
+          <div class="tip-glow"></div>
+        </div>
+
+        <div class="tip-card" data-tip="goals">
+          <div class="tip-icon">🎯</div>
+          <h3>Savings Goals</h3>
+          <p>Set monthly savings targets and track progress</p>
+          <div class="tip-glow"></div>
+        </div>
+
+        <div class="tip-card" data-tip="alerts">
+          <div class="tip-icon">🔔</div>
+          <h3>Smart Alerts</h3>
+          <p>Get notified when you're close to budget limits</p>
+          <div class="tip-glow"></div>
+        </div>
+      </div>
+
+      <div class="suggestions" id="suggestions">
+        <h3>Personalized Suggestions</h3>
+        <div class="suggestion-list" id="suggestionList">
+          <!-- Suggestions will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-content">
+        <div class="modal-icon">✅</div>
+        <h3>Expense Added!</h3>
+        <p id="modalMessage">Your expense has been recorded successfully.</p>
+        <button class="modal-btn" id="modalClose">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
