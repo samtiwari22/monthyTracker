@@ -15,6 +15,7 @@ class ExpenseTracker {
       this.renderExpenses();
       this.generateSuggestions();
       this.setCurrentDate();
+      this.checkMonthlyReset(); // Ensure this is called during initialization
     }
   
     setupEventListeners() {
@@ -96,9 +97,11 @@ class ExpenseTracker {
   
       this.currentScreen = screenName;
   
-      // Update data when switching to dashboard
+      // Update data when switching to dashboard or history
       if (screenName === 'dashboard') {
         this.updateDashboard();
+      } else if (screenName === 'history') {
+        this.showHistory();
       }
     }
   
@@ -366,6 +369,63 @@ class ExpenseTracker {
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('expenseDate').value = today;
     }
+  
+    checkMonthlyReset() {
+      const today = new Date();
+      const storedResetDate = localStorage.getItem('resetDate');
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
+  
+      if (!storedResetDate || storedResetDate !== `${currentYear}-${currentMonth}`) {
+        this.resetData();
+        localStorage.setItem('resetDate', `${currentYear}-${currentMonth}`);
+      }
+    }
+  
+    resetData() {
+      // Save current month's data to history
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      const monthlyExpenses = this.expenses.filter(expense => 
+        expense.date.startsWith(currentMonth)
+      );
+      const history = JSON.parse(localStorage.getItem('history')) || [];
+      history.push({ month: currentMonth, expenses: monthlyExpenses });
+      localStorage.setItem('history', JSON.stringify(history));
+  
+      // Reset current month's data
+      this.expenses = [];
+      localStorage.setItem('expenses', JSON.stringify(this.expenses));
+      this.updateDashboard();
+      this.renderExpenses();
+      this.generateSuggestions();
+  
+      this.showModal('Reset Complete', 'Your data has been reset for the new month.');
+    }
+  
+    showHistory() {
+      const history = JSON.parse(localStorage.getItem('history')) || [];
+      const historyContainer = document.getElementById('historyContainer');
+
+      if (history.length === 0) {
+        historyContainer.innerHTML = '<p>No history available.</p>';
+        return;
+      }
+
+      historyContainer.innerHTML = history.map(monthData => `
+        <div class="history-month">
+          <h3>${monthData.month}</h3>
+          <ul>
+            ${monthData.expenses.map(expense => `
+              <li>
+                <div class="expense-category">${this.getCategoryName(expense.category)}</div>
+                <div class="expense-amount">${this.formatCurrency(expense.amount)}</div>
+                <div class="expense-date">${this.formatDate(expense.date)}</div>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
   }
   
   // Global variable to access the tracker instance
@@ -448,4 +508,3 @@ class ExpenseTracker {
     }
   `;
   document.head.appendChild(style);
-  
