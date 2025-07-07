@@ -38,6 +38,10 @@
         <span class="nav-icon">💡</span>
         <span>Tips</span>
       </button>
+      <button class="nav-btn" data-screen="history">
+        <span class="nav-icon">📜</span>
+        <span>History</span>
+      </button>
     </nav>
 
     <!-- Dashboard Screen -->
@@ -97,6 +101,12 @@
         </div>
       </div>
     </div>
+
+    <!-- Reset Button -->
+  <button id="resetButton" class="reset-btn">
+    <span>Reset</span>
+    <div class="btn-glow"></div>
+  </button>
 
     <!-- Add Expense Screen -->
     <div class="screen" id="add-expense">
@@ -206,6 +216,17 @@
         <div class="suggestion-list" id="suggestionList">
           <!-- Suggestions will be dynamically added here -->
         </div>
+      </div>
+    </div>
+
+    <!-- History Screen -->
+    <div class="screen" id="history">
+      <div class="screen-header">
+        <h1>Expense History</h1>
+        <p class="subtitle">Review past months' expenses</p>
+      </div>
+      <div id="historyContainer">
+        <!-- History data will be dynamically added here -->
       </div>
     </div>
   </div>
